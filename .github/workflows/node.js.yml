@@ -16,10 +16,10 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          ref: ${{ github.event.head_commit.message }}
 
       - name: setup node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 19
 
@@ -27,7 +27,7 @@ jobs:
         run: npm install
 
       - name: report-compressed-size
-        uses: preactjs/compressed-size-action@v2
+        uses: preactjs/compressed-size-action@v3
         with:
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
           build-script: 'build'
