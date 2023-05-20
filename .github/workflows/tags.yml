@@ -1,0 +1,22 @@
+name: Auto Label
+
+on:
+  issues:
+    types: [opened,reopened]
+
+jobs:
+  auto-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+      - name: Install dependencies
+        run: npm install
+      - name: Auto label issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node index.js
