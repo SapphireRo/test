@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  report-size:
+  report-Analysis:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
