@@ -6,33 +6,22 @@ on:
       - main
 
 jobs:
-  create-issue:
+  auto-issue:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Check commit message for [bug]
-        id: check-commit
-        run: echo "::set-output name=contains_bug::$(git log --format=%B -n 1 ${{ github.sha }} | grep -q '\[bug\]'; echo $?)"
-
-      - name: Create issue if commit contains [bug]
-        if: steps.check-commit.outputs.contains_bug == '0'
-        uses: actions/github-script@v4
+      - name: Install nodejs
+        uses: actions/setup-node@v2
         with:
-          script: |
-            const title = `Bug found in commit ${process.env.GITHUB_SHA}`;
-            const body = `A bug was found in commit ${process.env.GITHUB_SHA}. Please investigate.`;
-            const octokit = require('@octokit/rest')();
-            octokit.authenticate({
-              type: 'token',
-              token: process.env.GITHUB_TOKEN,
-            });
-            octokit.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: title,
-              body: body,
-            });
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run the script
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node issue.js
